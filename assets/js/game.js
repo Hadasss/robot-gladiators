@@ -1,3 +1,9 @@
-document.write("Hello World!");
+function fight() {
+  window.alert("The fight has begun!");
+}
 
-window.alert("This is an alert! JavaScript is running!");
+// fight();
+
+let playerName = window.prompt("What's your robot's name?");
+
+console.log(playerName);
