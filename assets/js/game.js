@@ -24,14 +24,15 @@ var fight = function (enemyName) {
 
       if (confirmSkip) {
         window.alert(playerName + " has chosen to skip this fight. Goodbye!");
-        playerMoney = playerMoney - 10;
+        playerMoney = Math.max(0, playerMoney - 10);
         console.log("playermoney", playerMoney);
         break;
       }
     }
 
     // if (fightPrompt == "FIGHT" || fightPrompt == "fight") {
-    enemyHealth = enemyHealth - playerAttack;
+    var damage = randomNumber(playerAttack - 3, playerAttack);
+    enemyHealth = Math.max(0, enemyHealth - damage);
     console.log(
       `${playerName} attacked ${enemyName}. ${enemyName} has now ${enemyHealth} health left.`
     );
@@ -40,11 +41,13 @@ var fight = function (enemyName) {
       window.alert(`${enemyName} has died!`);
       playerMoney = playerMoney + 20;
       console.log("playermoney", playerMoney);
+      break;
     } else {
       window.alert(`${enemyName} still has ${enemyHealth} health left.`);
     }
 
-    playerHealth = playerHealth - enemyAttack;
+    var damage = randomNumber(enemyAttack - 3, enemyAttack);
+    playerHealth = Math.max(0, playerHealth - damage);
     console.log(
       `${enemyName} attacked ${playerName}. ${playerName} has now ${playerHealth} health remaimimg.`
     );
@@ -77,23 +80,9 @@ var endGame = function () {
 };
 
 var shop = function () {
-  console.log("entered the shop");
   var shopOptionPrompt = window.prompt(
     `Do you want to REFILL your health, UPGRADE your attacks or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice.`
   );
-  //   if (shopOptionPrompt == "LEAVE" || shopOptionPrompt == "leave") {
-  //     break;
-  //   } else if (shopOptionPrompt == "REFILL" || shopOptionPrompt == "refill") {
-  //     playerHealth = playerHealth + 10;
-  //     playerMoney = playerMoney - 10;
-  //     break;
-  //   } else if (shopOptionPrompt == "UPGRADE" || shopOptionPrompt == "upgrade") {
-  //     playerAttack = playerAttack + 2;
-  //     playerMoney = playerMoney - 10;
-  //     break;
-  //   } else {
-  //     window.alert(`Please choose a valid option.`);
-  //   }
 
   switch (shopOptionPrompt) {
     case "REFILL":
@@ -102,10 +91,10 @@ var shop = function () {
         window.alert("Refilling player's health by 20 for 7 dollars.");
         playerHealth = playerHealth + 20;
         playerMoney = playerMoney - 7;
-        break;
       } else {
         window.alert("You don't have enough money!");
       }
+      break;
 
     case "UPGRADE":
     case "upgrade":
@@ -113,11 +102,10 @@ var shop = function () {
         window.alert("Upgrading player's attack by 6 for 7 dollars.");
         playerAttack = playerAttack + 6;
         playerMoney = playerMoney - 7;
-        break;
       } else {
         window.alert("You don't have enough money!");
-        break;
       }
+      break;
 
     case "LEAVE":
     case "leave":
@@ -125,10 +113,15 @@ var shop = function () {
       break;
 
     default:
-      console.log("Please choose a valid option.");
+      window.alert("Please choose a valid option.");
       shop();
       break;
   }
+};
+
+var randomNumber = function (min, max) {
+  var value = Math.floor(Math.random() * (max - min + 1) + min);
+  return value;
 };
 
 startGame = function () {
@@ -137,11 +130,12 @@ startGame = function () {
   playerMoney = 10;
 
   debugger;
+
   for (var i = 0; i < enemyNames.length; i++) {
     if (playerHealth > 0) {
       window.alert(`Welcome ro Robot Gladiators! Round ${i + 1}`);
       var pickedEnemyName = enemyNames[i];
-      enemyHealth = 50;
+      enemyHealth = randomNumber(40, 60);
       fight(pickedEnemyName);
 
       if (i < enemyNames.length - 1 && playerHealth > 0) {
@@ -151,15 +145,13 @@ startGame = function () {
         if (storeConfirm) {
           shop();
         }
-      } else {
-        window.alert(`You have lost your robot in battle! Game Over!`);
-        break;
       }
+    } else {
+      window.alert(`You have lost your robot in battle! Game Over!`);
+      break;
     }
-    endGame();
   }
-
-  startGame();
+  endGame();
 };
 
 startGame();
