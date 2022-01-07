@@ -1,32 +1,39 @@
 console.log("hello");
+debugger;
 
-// Game States:
-// "WIN" - Player robot has defeated all enemy-robots
-//      * Fight all enemy robots
-//      * Defeat each enemy robot
-// "LOSE" - player robot's health is zero or less
+var randomNumber = function (min, max) {
+  var value = Math.floor(Math.random() * (max - min + 1) + min);
+  return value;
+};
+
+var fightOrSkip = function () {
+  var fightPrompt = window.prompt(
+    "Would you like to FIGHT or SKIP this battle? Enter Fight or SKIP to choose."
+  );
+  if (fightPrompt === "" || fightPrompt === null) {
+    window.alert("You need to provide a valid answer! Please try again.");
+    return fightOrSkip();
+  }
+
+  if (fightPrompt === "skip" || fightPrompt === "SKIP") {
+    var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+    if (confirmSkip) {
+      window.alert(
+        `${playerInfo.name} has decided to skip this fight. Goodbye!`
+      );
+      playerInfo.money = Math.max(0, playerInfo.money - 10);
+      console.log("player money", playerInfo.money);
+      shop();
+    }
+  }
+};
 
 var fight = function (enemy) {
   while (playerInfo.health > 0 && enemy.health > 0) {
-    var fightPrompt = window.prompt(
-      "Would you like to FIGHT or SKIP this battle? Enter Fight or SKIP to choose."
-    );
-
-    if (fightPrompt == "SKIP" || fightPrompt == "skip") {
-      var confirmSkip = window.confirm("Are you sure you'd like to quit?");
-
-      if (confirmSkip) {
-        window.alert(
-          playerInfo.name + " has chosen to skip this fight. Goodbye!"
-        );
-        playerInfo.money = Math.max(0, playerInfo.money - 10);
-        console.log("player money", playerInfo.money);
-        break;
-      }
-    }
-
-    // if (fightPrompt == "FIGHT" || fightPrompt == "fight") {
+    fightOrSkip();
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+
     enemy.health = Math.max(0, enemy.health - damage);
     console.log(
       `${playerInfo.name} attacked ${enemy.name}. ${enemy.name} has now ${enemy.health} health left.`
@@ -104,11 +111,6 @@ var shop = function () {
   }
 };
 
-var randomNumber = function (min, max) {
-  var value = Math.floor(Math.random() * (max - min + 1) + min);
-  return value;
-};
-
 var getPlayerName = function () {
   var name = "";
 
@@ -169,7 +171,6 @@ var startGame = function () {
   console.log(playerInfo);
 
   for (var i = 0; i < enemyInfo.length; i++) {
-    // debugger;
     if (playerInfo.health > 0) {
       window.alert(`Welcome to Robot Gladiators! Round ${i + 1}`);
       var pickedEnemyObj = enemyInfo[i];
