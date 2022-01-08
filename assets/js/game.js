@@ -1,5 +1,4 @@
 console.log("hello");
-debugger;
 
 var randomNumber = function (min, max) {
   var value = Math.floor(Math.random() * (max - min + 1) + min);
@@ -10,12 +9,15 @@ var fightOrSkip = function () {
   var fightPrompt = window.prompt(
     "Would you like to FIGHT or SKIP this battle? Enter Fight or SKIP to choose."
   );
+
+  fightPrompt = fightPrompt.toLocaleLowerCase();
+
   if (fightPrompt === "" || fightPrompt === null) {
     window.alert("You need to provide a valid answer! Please try again.");
     return fightOrSkip();
   }
 
-  if (fightPrompt === "skip" || fightPrompt === "SKIP") {
+  if (fightPrompt === "skip") {
     var confirmSkip = window.confirm("Are you sure you'd like to quit?");
 
     if (confirmSkip) {
@@ -24,14 +26,18 @@ var fightOrSkip = function () {
       );
       playerInfo.money = Math.max(0, playerInfo.money - 10);
       console.log("player money", playerInfo.money);
-      shop();
+      return true;
+    } else {
+      return false;
     }
   }
 };
 
 var fight = function (enemy) {
   while (playerInfo.health > 0 && enemy.health > 0) {
-    fightOrSkip();
+    if (fightOrSkip()) {
+      break;
+    }
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
     enemy.health = Math.max(0, enemy.health - damage);
@@ -118,7 +124,7 @@ var getPlayerName = function () {
     name = prompt("What is your robot's name?");
   }
 
-  console.log(`Your robot;s name is ${name}`);
+  console.log(`Your robot's name is ${name}`);
 };
 
 var playerInfo = {
@@ -167,6 +173,8 @@ var enemyInfo = [
 ];
 
 var startGame = function () {
+  debugger;
+
   playerInfo.reset();
   console.log(playerInfo);
 
